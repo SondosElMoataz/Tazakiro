@@ -19,4 +19,9 @@ router
   .route("/addStadium/")
   .post(userontroller.createNewStadium);
 
+router
+  .route("/viewMatch/")
+  .get(userontroller.viewMatchDetails);
+
+  
   module.exports = router;

@@ -11,7 +11,7 @@ const reservationSchema = new Schema({
     required: true,
     trim: true,
   },
-  seats: {
+  seats: {  // seat reserved , seats el howa ekhtrha
     type: [Schema.Types.Mixed],
     required: true,
   },

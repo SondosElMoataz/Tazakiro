@@ -4,16 +4,16 @@ const { Schema } = mongoose;
 
 const stadiumSchema = new Schema({
   
-    name: {
+  name: {
     type: String,
     required: true,
     trim: true,
   }, 
-  row: {
+  row: { //numberr rows
     type: Number,
     required: true,
   },
-  col: {
+  col: {  // no seats per row
     type: Number,
     required: true,
   },
@@ -23,17 +23,7 @@ const stadiumSchema = new Schema({
     required: true,
     trim: true,
     lowercase: true,
-  },
-
-  ///----------------
-  seats: {
-    type: [{type:Number}]
-  },
-  
-  seatsAvailable: {
-    type: Number
   }
-
 });
 
 

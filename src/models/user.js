@@ -75,7 +75,11 @@ const userSchema = Schema(
         type: String,
         default: 'guest',
         enum: ['guest', 'fan','manager', 'siteAdmin'],
-      }
+    },
+    authorized:{
+      type: Boolean ,
+      default: false
+    }
   }
 );
 

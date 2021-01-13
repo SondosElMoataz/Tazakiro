@@ -9,6 +9,10 @@ var number_of_site_admin = 0
 exports.createUser= async (req, res) => {
     try {
       const newUser = await User.create(req.body);
+      // if(newUser.role == "siteAdmin" || newUser.role == "manager" )
+      // {
+      //   await User.findByIdAndUpdate(req.body.id,{ $set:{authorized: true } });
+      // }
       res.status(201).json({
         status: "success",
         data: {
@@ -23,7 +27,50 @@ exports.createUser= async (req, res) => {
       });
     }
   };
-  
+//----------------------------------------------------------------------------SITE ADMIN
+// exports.getNewUsers= async (req, res) => {
+//   try 
+//   {
+//     const IN_User= await User.findById(req.query.id);
+//     console.log(IN_User)
+//     if(IN_User!==null)
+//     {
+//       if(IN_User.role == "siteAdmin")
+//       {
+//         const users = await User.find();
+//         var guests = []
+//         for( var i =0;i<users.length;i++)
+//         {
+//           if(users[i].role == "guest")
+//           {
+//             guests.push(users[i])
+//           }
+//         } 
+//         if(guests!==null)
+//         {
+//           res.status(200).json({
+//             status: "success",
+//             data : guests
+//           });
+//         }else{
+//           var err ="invalid match id";
+//           throw err;
+//         }
+//       }
+//     }else{
+//       var err= "user not found";
+//       throw err;
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     res.status(400).json({
+//       status: "fail",
+//       message: err,
+//     });
+//   }
+// };
+
+
 //----------------------------------------------------------------------------MANAGER
 //1)Create a new match event
   exports.createNewMatch= async (req, res) => {
@@ -116,6 +163,43 @@ exports.createNewStadium= async (req, res) => {
             stadium: newStadium,
           },
         });
+      }else{
+        var err= " not a manager";
+        throw err;
+      }
+    }else{
+      var err= "user not found";
+      throw err;
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
+
+//4) View match details
+exports.viewMatchDetails= async (req, res) => {
+  try {
+    const IN_User= await User.findById(req.query.id);
+    console.log("------------sfvfs--------------------")
+    if(IN_User!==null)
+    {
+      if(IN_User.role == "manager")
+      {
+        const matches = await Match.find();
+        if(matches!==null)
+        {
+          res.status(200).json({
+            status: "success",
+            data : matches
+          });
+        }else{
+          var err ="invalid match id";
+          throw err;
+        }
       }else{
         var err= " not a manager";
         throw err;
