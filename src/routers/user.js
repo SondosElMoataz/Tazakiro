@@ -44,5 +44,7 @@ router
   .get(userController.getUser)
   .patch(userController.updateUser)
 
+  .route("/viewMatch/")
+  .get(userController.viewMatchDetails);
 
   module.exports = router;

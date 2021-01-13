@@ -383,6 +383,7 @@ exports.getUser = async (req, res) => {
 
 //_______UPDATE__USER__//
 exports.updateUser = async (req, res) => {
+
   const updates = Object.keys(req.body);
   const allowedUpdates = ["firstname",
   "lastname",
@@ -390,7 +391,6 @@ exports.updateUser = async (req, res) => {
   "gender",
   "city",
   "address",
-  "email",
   "password",];
 
   const isValidOperation = updates.every((update) =>allowedUpdates.includes(update));
@@ -406,6 +406,10 @@ exports.updateUser = async (req, res) => {
       user[update] = req.body[update]
     })
     await user.save();
+    res.status(200).json({
+      status: "success",
+      data: user,
+    });
   }catch (err) {
     res.status(404).json({
       status: "fail",
@@ -417,3 +421,47 @@ exports.updateUser = async (req, res) => {
 };
 
 
+exports.getCurrentUser = async (req, res) => {
+  console.log(req.user);
+  res.send(req.user);
+};
+
+
+exports.login = async (req, res) => {
+  try {
+    const user = await User.findByCredentials(
+      req.body.email,
+      req.body.password
+    );
+    // console.log("test");
+    const token = await user.generateAuthToken();
+    res.status(200).send({ status: "success", user, token }); // we will just send json with user info untill its implemented to direct user to his homepage.
+  } catch (e) {
+    res.status(400).send({ status: "fail", error: e });
+  }
+};
+
+//user -> query user id 
+// match -> body id 
+
+exports.viewMatchDetails = async (req, res) => {
+  try {
+    const user = await User.findById(req.query.id);
+    const match = await Match.findById(req.body.id);
+      return res.status(200).json({
+        status: "success",
+        data: {
+          match: match,
+  
+        }
+      });
+
+   
+  } catch (err) {
+    console.log(err);
+    res.status(404).json({
+      status: "fail",
+      message: err.message
+    });
+  }
+};

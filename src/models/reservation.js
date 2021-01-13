@@ -6,11 +6,7 @@ const reservationSchema = new Schema({
     type: Date,
     required: true,
   },
-  time: {
-    type: String,
-    required: true,
-    trim: true,
-  },
+
   seats: {  // seat reserved , seats el howa ekhtrha
     type: [Schema.Types.Mixed],
     required: true,
@@ -24,6 +20,9 @@ const reservationSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref : 'User',
     required: true,
+  },
+  ticketNumber : {
+    type: Number,
   }
   
   
