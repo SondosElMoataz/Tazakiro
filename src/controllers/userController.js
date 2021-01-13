@@ -26,6 +26,94 @@ exports.createUser= async (req, res) => {
   };
 
 //----------------------------------------------------------------------------SITE ADMIN
+exports.getAllUsers= async (req, res) => {
+  try 
+  {
+    const IN_User= await User.findById(req.query.id);
+    if(IN_User!==null)
+    {
+      if(IN_User.role == "siteAdmin")
+      {
+        const users = await User.find();
+        var users_arr = []
+        for (var i=0 ;i<users.length;i++)
+        {
+          console.log(req.query.id)
+          console.log(users[i].id)
+          if(users[i].id != req.query.id )
+          {
+            users_arr.push(users[i])
+          }
+        }
+
+        if(users_arr!==null)
+        {
+          res.status(200).json({
+            status: "success",
+            data : users_arr
+          });
+        }else{
+          var err ="invalid users id";
+          throw err;
+        }
+      }
+      else{
+        var err ="not a site admin";
+        throw err;
+      }
+    }else{
+      var err= "user not found";
+      throw err;
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
+
+
+exports.removeUser= async (req, res) => {
+  try 
+  {
+    const IN_User= await User.findById(req.query.id);
+    if(IN_User!==null)
+    {
+      if(IN_User.role == "siteAdmin")
+      {
+        const user = await User.findById(req.params.id);
+        if(user!==null)
+        {
+          await User.findByIdAndDelete(req.params.id);
+          res.status(200).json({
+            status: "success"
+          });
+        }else{
+          var err ="invalid user id";
+          throw err;
+        }
+      }
+      else{
+        var err ="not a site admin";
+        throw err;
+      }
+    }else{
+      var err= "admin not found";
+      throw err;
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
+
+
+
 exports.getUnAuthorizedUsers= async (req, res) => {
   try 
   {
