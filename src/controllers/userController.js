@@ -2,6 +2,7 @@ const User = require(`./../models/user.js`);
 const ObjectId = require("mongodb").ObjectId;
 const Match = require(`./../models/match.js`);
 const Stadium = require(`../models/stadium.js`);
+const jwt = require("jsonwebtoken");
 
 
 var number_of_site_admin = 0
@@ -132,3 +133,89 @@ exports.createNewStadium= async (req, res) => {
     });
   }
 };
+
+
+
+
+
+
+//___________________CUSTOMERSS __FANS __________________________//
+
+///__GET USER__//
+
+
+exports.getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) {
+      res.status(200).json({
+        status: "success",
+        data: {
+          user,
+        },
+      });
+    }
+    if (!user) return res.sendStatus(404);
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: "Id not found",
+      error: err.message,
+    });
+  }
+};
+
+//_______UPDATE__USER__//
+exports.updateUser = async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["firstname",
+  "lastname",
+  "birthdate",
+  "gender",
+  "city",
+  "address",
+  "email",
+  "password",];
+
+  const isValidOperation = updates.every((update) =>allowedUpdates.includes(update));
+  if (!isValidOperation) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Bad Request",
+    });
+  }
+  try {    
+    const user = await User.findById(req.params.id);
+    updates.forEach((update) => {
+      user[update] = req.body[update]
+    })
+    await user.save();
+  }catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+
+
+}
+
+
+
+
+
+
+
+
+/*
+"firstname",
+    "lastname",
+    "birthdate",
+    "gender",
+    "city",
+    "address",
+    "email",
+    "password",
+
+
+*/

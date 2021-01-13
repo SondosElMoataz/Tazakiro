@@ -19,4 +19,11 @@ router
   .route("/addStadium/")
   .post(userontroller.createNewStadium);
 
+
+  router
+  .route("/:id")
+  .get(auth,userController.getUser)
+  .patch(userController.updateUser)
+  .delete(userController.deleteUser);
+
   module.exports = router;
