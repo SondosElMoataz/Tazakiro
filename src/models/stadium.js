@@ -11,11 +11,11 @@ const stadiumSchema = new Schema({
   }, 
   row: { //numberr rows
     type: Number,
-    required: true,
+    required: true
   },
   col: {  // no seats per row
     type: Number,
-    required: true,
+    required: true
   },
 
   city: {

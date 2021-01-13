@@ -21,13 +21,7 @@ const matchSchema = new Schema({
     type: Date,
     required: true,
     default: Date.now 
-
   },
-  Time: {
-    type: String,
-    required: true,
-  },
-
   mainReferee: {
     type: String,
     required: true,

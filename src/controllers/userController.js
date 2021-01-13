@@ -76,20 +76,24 @@ exports.createUser= async (req, res) => {
 //1)Create a new match event
   exports.createNewMatch= async (req, res) => {
     try {
-      console.log(req.query.id)
       const IN_User= await User.findById(req.query.id);
-      console.log(IN_User)
       if(IN_User!==null)
       {
         if(IN_User.role == "manager")
         {
           const newMatch = await Match.create(req.body);
-          res.status(201).json({
-            status: "success",
-            data: {
-              match: newMatch,
-            },
-          });
+          if(newMatch.Date >= Date.now )
+          {
+            res.status(201).json({
+              status: "success",
+              data: {
+                match: newMatch,
+              },
+            });
+          }else{
+            var err= " not a valid date";
+            throw err;
+          }
         }else{
           var err= " not a manager";
           throw err;
@@ -116,13 +120,12 @@ exports.createUser= async (req, res) => {
       {
         if(IN_User.role == "manager")
         {
-          console.log("hi")
-          const match = await Match.findByIdAndUpdate(req.query.id1, req.body);
+          const match = await Match.findByIdAndUpdate(req.params.id, req.body);
           console.log(match)
           if(match!==null)
           {
             res.status(200).json({
-              status: "success",
+              status:  "success",
               data: {match}
             });
           }else{
@@ -157,13 +160,19 @@ exports.createNewStadium= async (req, res) => {
     {
       if(IN_User.role == "manager")
       {
-        const newStadium = await Stadium.create(req.body);
-        res.status(201).json({
-          status: "success",
-          data: {
-            stadium: newStadium,
-          },
-        });
+        if(req.body.row < 20 && req.body.col <20)
+        {
+          const newStadium = await Stadium.create(req.body);
+          res.status(201).json({
+            status: "success",
+            data: {
+              stadium: newStadium,
+            },
+          });
+        }else{
+          var err= " exceeded limit for row/col";
+        throw err;
+        }
       }else{
         var err= " not a manager";
         throw err;
@@ -181,6 +190,43 @@ exports.createNewStadium= async (req, res) => {
   }
 };
 
+
+//4) View match details
+exports.viewMatchDetails= async (req, res) => {
+  try {
+    const IN_User= await User.findById(req.query.id);
+    console.log("------------sfvfs--------------------")
+    if(IN_User!==null)
+    {
+      if(IN_User.role == "manager")
+      {
+        const matches = await Match.find();
+        if(matches!==null)
+        {
+          res.status(200).json({
+            status: "success",
+            data : matches
+          });
+        }else{
+          var err ="invalid match id";
+          throw err;
+        }
+      }else{
+        var err= " not a manager";
+        throw err;
+      }
+    }else{
+      var err= "user not found";
+      throw err;
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
 
 
 
@@ -245,60 +291,6 @@ exports.updateUser = async (req, res) => {
   }
 
 
-}
-
-
-
-
-
-
-
-
-/*
-"firstname",
-    "lastname",
-    "birthdate",
-    "gender",
-    "city",
-    "address",
-    "email",
-    "password",
-
-
-*/
-//4) View match details
-exports.viewMatchDetails= async (req, res) => {
-  try {
-    const IN_User= await User.findById(req.query.id);
-    console.log("------------sfvfs--------------------")
-    if(IN_User!==null)
-    {
-      if(IN_User.role == "manager")
-      {
-        const matches = await Match.find();
-        if(matches!==null)
-        {
-          res.status(200).json({
-            status: "success",
-            data : matches
-          });
-        }else{
-          var err ="invalid match id";
-          throw err;
-        }
-      }else{
-        var err= " not a manager";
-        throw err;
-      }
-    }else{
-      var err= "user not found";
-      throw err;
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({
-      status: "fail",
-      message: err,
-    });
-  }
 };
+
+

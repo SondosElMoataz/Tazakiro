@@ -1,34 +1,33 @@
 const express = require('express');
 const router = new express.Router();
 
-const userontroller = require(`./../controllers/userController`); 
+const userController = require(`./../controllers/userController`); 
 
 router
   .route("/")
-  .post(userontroller.createUser);
+  .post(userController.createUser);
 
 router
   .route("/createMatch/")
-  .post(userontroller.createNewMatch);
+  .post(userController.createNewMatch);
 
 router
-  .route("/editMatch/")
-  .patch(userontroller.editMatch);
+  .route("/editMatch/:id")
+  .patch(userController.editMatch);
 
 router
   .route("/addStadium/")
-  .post(userontroller.createNewStadium);
-
-
-  router
-  .route("/:id")
-  .get(auth,userController.getUser)
-  .patch(userController.updateUser)
-  .delete(userController.deleteUser);
+  .post(userController.createNewStadium);
 
 router
   .route("/viewMatch/")
-  .get(userontroller.viewMatchDetails);
+  .get(userController.viewMatchDetails);
 
-  
+
+router
+  .route("/:id")
+  .get(userController.getUser)
+  .patch(userController.updateUser)
+
+
   module.exports = router;
