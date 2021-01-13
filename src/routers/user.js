@@ -15,4 +15,8 @@ router
   .route("/editMatch/")
   .patch(userontroller.editMatch);
 
+router
+  .route("/addStadium/")
+  .post(userontroller.createNewStadium);
+
   module.exports = router;
