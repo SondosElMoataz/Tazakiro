@@ -26,4 +26,9 @@ router
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
 
+router
+  .route("/viewMatch/")
+  .get(userontroller.viewMatchDetails);
+
+  
   module.exports = router;
