@@ -8,8 +8,12 @@ const stadiumSchema = new Schema({
     type: String,
     required: true,
     trim: true,
+  }, 
+  row: {
+    type: Number,
+    required: true,
   },
-  ticketPrice: {
+  col: {
     type: Number,
     required: true,
   },
@@ -21,17 +25,18 @@ const stadiumSchema = new Schema({
     lowercase: true,
   },
 
+  ///----------------
   seats: {
-    type: [Schema.Types.Mixed],
-    required: true,
+    type: [{type:Number}]
   },
   
   seatsAvailable: {
-    type: Number,
-    required: true,
-  },
+    type: Number
+  }
 
 });
+
+
 
 const Stadium = mongoose.model('Stadium', stadiumSchema);
 

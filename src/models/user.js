@@ -45,6 +45,8 @@ const userSchema = Schema(
     gender: {
         type:String,
         required: true,
+        default: 'female',
+        enum: ['female', 'male']
     },
     
     city: {
@@ -53,7 +55,7 @@ const userSchema = Schema(
     },
     address: {
         type:String,
-        required: true,
+        required: false,
     },
   
 
@@ -73,20 +75,7 @@ const userSchema = Schema(
         type: String,
         default: 'guest',
         enum: ['guest', 'fan','manager', 'siteAdmin'],
-      },
-    
-
-    tokens: [
-      {
-        token: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
-  },
-  {
-    timestamps: true,
+      }
   }
 );
 
@@ -108,32 +97,32 @@ const userSchema = Schema(
 //     return token;
 //   };
 
-userSchema.methods.generateAuthToken = async function() {
-  const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, 'mySecret');
-  user.tokens = user.tokens.concat({ token });
-  await user.save();
-  return token;
-};
+// userSchema.methods.generateAuthToken = async function() {
+//   const user = this;
+//   const token = jwt.sign({ _id: user._id.toString()}, 'mySecret');
+//   user.tokens = user.tokens.concat({ token });
+//   await user.save();
+//   return token;
+// };
 
-userSchema.statics.findByCredentials = async (username, password) => {
-  const user = await User.findOne({ username });
-  if (!user) throw new Error('Unable to login');
+// userSchema.statics.findByCredentials = async (username, password) => {
+//   const user = await User.findOne({ username });
+//   if (!user) throw new Error('Unable to login');
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new Error('Unable to login');
+//   const isMatch = await bcrypt.compare(password, user.password);
+//   if (!isMatch) throw new Error('Unable to login');
 
-  return user;
-};
+//   return user;
+// };
 
-// Hash the plain text password before save
-userSchema.pre('save', async function(next) {
-  const user = this;
-  if (user.isModified('password')) {
-    user.password = await bcrypt.hash(user.password, 8);
-  }
-  next();
-});
+// // Hash the plain text password before save
+// userSchema.pre('save', async function(next) {
+//   const user = this;
+//   if (user.isModified('password')) {
+//     user.password = await bcrypt.hash(user.password, 8);
+//   }
+//   next();
+// });
 
 const User = mongoose.model('User', userSchema);
 

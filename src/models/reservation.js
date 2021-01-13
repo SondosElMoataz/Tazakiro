@@ -15,22 +15,9 @@ const reservationSchema = new Schema({
     type: [Schema.Types.Mixed],
     required: true,
   },
-  ticketPrice: {
-    type: Number,
-    required: true,
-  },
-  total: {
-    type: Number,
-    required: true,
-  },
   matchId: {
     type: Schema.Types.ObjectId,
     ref: 'Match',
-    required: true,
-  },
-  stadiumId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Stadium',
     required: true,
   },
   userId: {
