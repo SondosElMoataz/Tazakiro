@@ -44,6 +44,7 @@ router
   .get(userController.getUser)
   .patch(userController.updateUser)
 
+router
   .route("/viewMatch/")
   .get(userController.viewMatchDetails);
 
