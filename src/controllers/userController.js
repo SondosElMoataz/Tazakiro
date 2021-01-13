@@ -6,14 +6,10 @@ const jwt = require("jsonwebtoken");
 
 
 var number_of_site_admin = 0
-
+//----------------------------------------------------------------------------Guest
 exports.createUser= async (req, res) => {
     try {
       const newUser = await User.create(req.body);
-      // if(newUser.role == "siteAdmin" || newUser.role == "manager" )
-      // {
-      //   await User.findByIdAndUpdate(req.body.id,{ $set:{authorized: true } });
-      // }
       res.status(201).json({
         status: "success",
         data: {
@@ -28,49 +24,89 @@ exports.createUser= async (req, res) => {
       });
     }
   };
-//----------------------------------------------------------------------------SITE ADMIN
-// exports.getNewUsers= async (req, res) => {
-//   try 
-//   {
-//     const IN_User= await User.findById(req.query.id);
-//     console.log(IN_User)
-//     if(IN_User!==null)
-//     {
-//       if(IN_User.role == "siteAdmin")
-//       {
-//         const users = await User.find();
-//         var guests = []
-//         for( var i =0;i<users.length;i++)
-//         {
-//           if(users[i].role == "guest")
-//           {
-//             guests.push(users[i])
-//           }
-//         } 
-//         if(guests!==null)
-//         {
-//           res.status(200).json({
-//             status: "success",
-//             data : guests
-//           });
-//         }else{
-//           var err ="invalid match id";
-//           throw err;
-//         }
-//       }
-//     }else{
-//       var err= "user not found";
-//       throw err;
-//     }
-//   } catch (err) {
-//     console.log(err);
-//     res.status(400).json({
-//       status: "fail",
-//       message: err,
-//     });
-//   }
-// };
 
+//----------------------------------------------------------------------------SITE ADMIN
+exports.getUnAuthorizedUsers= async (req, res) => {
+  try 
+  {
+    const IN_User= await User.findById(req.query.id);
+    if(IN_User!==null)
+    {
+      if(IN_User.role == "siteAdmin")
+      {
+        const users = await User.find();
+        var non_auth = []
+        for( var i =0;i<users.length;i++)
+        {
+          if(users[i].authorized == false)
+          {
+            non_auth.push(users[i])
+          }
+        } 
+        if(non_auth!==null)
+        {
+          res.status(200).json({
+            status: "success",
+            data : non_auth
+          });
+        }else{
+          var err ="invalid match id";
+          throw err;
+        }
+      }
+      else{
+        var err ="not a site admin";
+        throw err;
+      }
+    }else{
+      var err= "user not found";
+      throw err;
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
+
+exports.approveUsers= async (req, res) => {
+  try 
+  {
+    const IN_User= await User.findById(req.query.id);
+    if(IN_User!==null)
+    {
+      if(IN_User.role == "siteAdmin")
+      {
+        const user = await User.findById(req.params.id);
+        if(user!==null)
+        {
+          await User.findByIdAndUpdate(req.params.id,{ $set:{authorized: true} });
+          res.status(200).json({
+            status: "success"
+          });
+        }else{
+          var err ="invalid match id";
+          throw err;
+        }
+      }
+      else{
+        var err ="not a site admin";
+        throw err;
+      }
+    }else{
+      var err= "user not found";
+      throw err;
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
 
 //----------------------------------------------------------------------------MANAGER
 //1)Create a new match event
@@ -79,7 +115,7 @@ exports.createUser= async (req, res) => {
       const IN_User= await User.findById(req.query.id);
       if(IN_User!==null)
       {
-        if(IN_User.role == "manager")
+        if(IN_User.role == "manager" && IN_User.authorized == true )
         {
           const newMatch = await Match.create(req.body);
           if(newMatch.Date >= Date.now )
@@ -118,7 +154,7 @@ exports.createUser= async (req, res) => {
 
       if(IN_User!==null)
       {
-        if(IN_User.role == "manager")
+        if(IN_User.role == "manager" && IN_User.authorized == true )
         {
           const match = await Match.findByIdAndUpdate(req.params.id, req.body);
           console.log(match)
@@ -158,7 +194,7 @@ exports.createNewStadium= async (req, res) => {
     console.log(IN_User)
     if(IN_User!==null)
     {
-      if(IN_User.role == "manager")
+      if(IN_User.role == "manager" && IN_User.authorized == true )
       {
         if(req.body.row < 20 && req.body.col <20)
         {
@@ -195,10 +231,9 @@ exports.createNewStadium= async (req, res) => {
 exports.viewMatchDetails= async (req, res) => {
   try {
     const IN_User= await User.findById(req.query.id);
-    console.log("------------sfvfs--------------------")
     if(IN_User!==null)
     {
-      if(IN_User.role == "manager")
+      if(IN_User.role == "manager" && IN_User.authorized == true  )
       {
         const matches = await Match.find();
         if(matches!==null)

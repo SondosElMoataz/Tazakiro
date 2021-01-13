@@ -22,6 +22,12 @@ router
 router
   .route("/viewMatch/")
   .get(userController.viewMatchDetails);
+router
+  .route("/siteAdmin/")
+  .get(userController.getUnAuthorizedUsers)
+router
+  .route("/siteAdmin/:id")
+  .patch(userController.approveUsers)
 
 
 router

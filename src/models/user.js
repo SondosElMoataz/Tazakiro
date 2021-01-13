@@ -73,8 +73,8 @@ const userSchema = Schema(
     },
     role: {
         type: String,
-        default: 'guest',
-        enum: ['guest', 'fan','manager', 'siteAdmin'],
+        default: 'fan',
+        enum: ['fan','manager', 'siteAdmin'],
     },
     authorized:{
       type: Boolean ,
