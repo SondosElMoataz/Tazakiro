@@ -441,7 +441,9 @@ exports.login = async (req, res) => {
     );
     // console.log("test");
     // const token = await user.generateAuthToken();
-    res.status(200).send({ status: "success", user }); // we will just send json with user info untill its implemented to direct user to his homepage.
+    res.status(200).send({ status: "success", user });
+    console.log(res)
+    // we will just send json with user info untill its implemented to direct user to his homepage.
   } catch (e) {
     res.status(400).send({ status: "fail", error: e });
   }

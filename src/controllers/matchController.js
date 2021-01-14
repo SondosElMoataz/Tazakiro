@@ -45,7 +45,7 @@ exports.createMatch= async (req, res) => {
 
   exports.getAllReservations = async (req, res) => {
     try {
-      const match = await Match.findById(req.params.id);
+      const match = await Match.findById(req.params.matchid);
       const seats = await match.seats;
       res.status(200).json({
         status: "success",
