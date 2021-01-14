@@ -324,8 +324,8 @@ exports.viewMatchDetails= async (req, res) => {
     const IN_User= await User.findById(req.query.id);
     if(IN_User!==null)
     {
-      // if(IN_User.role == "manager" && IN_User.authorized == true  )
-      // {
+      if( IN_User.authorized == true  )
+      {
         const matches = await Match.find();
         console.log(matches)
         if(matches!==null)
@@ -338,10 +338,10 @@ exports.viewMatchDetails= async (req, res) => {
           var err ="invalid match id";
           throw err;
         }
-      // }else{
-      //   var err= " not a manager";
-      //   throw err;
-      // }
+      }else{
+        var err= " You are not authorised to this area ";
+        throw err;
+      }
     }else{
       var err= "user not found";
       throw err;
