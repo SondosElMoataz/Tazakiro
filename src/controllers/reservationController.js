@@ -22,6 +22,10 @@ exports.createReservation= async (req, res) =>{
         $set: { ticketNumber: ticketNumber},
       });
 
+      await Match.findByIdAndUpdate(req.body.matchId,{
+        $push: { seats: reservation.seats},
+      });
+
       res.status(201).json({
         status: "success",
         data: {
