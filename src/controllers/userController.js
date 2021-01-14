@@ -10,10 +10,13 @@ var number_of_site_admin = 0
 exports.createUser= async (req, res) => {
     try {
       const newUser = await User.create(req.body);
+      // const authToken = await newUser.generateAuthToken();
+
       res.status(201).json({
         status: "success",
         data: {
           user: newUser,
+          // token: authToken,
         },
       });
     } catch (err) {
@@ -321,9 +324,10 @@ exports.viewMatchDetails= async (req, res) => {
     const IN_User= await User.findById(req.query.id);
     if(IN_User!==null)
     {
-      if(IN_User.role == "manager" && IN_User.authorized == true  )
-      {
+      // if(IN_User.role == "manager" && IN_User.authorized == true  )
+      // {
         const matches = await Match.find();
+        console.log(matches)
         if(matches!==null)
         {
           res.status(200).json({
@@ -334,10 +338,10 @@ exports.viewMatchDetails= async (req, res) => {
           var err ="invalid match id";
           throw err;
         }
-      }else{
-        var err= " not a manager";
-        throw err;
-      }
+      // }else{
+      //   var err= " not a manager";
+      //   throw err;
+      // }
     }else{
       var err= "user not found";
       throw err;
@@ -350,7 +354,6 @@ exports.viewMatchDetails= async (req, res) => {
     });
   }
 };
-
 
 
 
@@ -434,34 +437,9 @@ exports.login = async (req, res) => {
       req.body.password
     );
     // console.log("test");
-    const token = await user.generateAuthToken();
-    res.status(200).send({ status: "success", user, token }); // we will just send json with user info untill its implemented to direct user to his homepage.
+    // const token = await user.generateAuthToken();
+    res.status(200).send({ status: "success", user }); // we will just send json with user info untill its implemented to direct user to his homepage.
   } catch (e) {
     res.status(400).send({ status: "fail", error: e });
-  }
-};
-
-//user -> query user id 
-// match -> body id 
-
-exports.viewMatchDetails = async (req, res) => {
-  try {
-    const user = await User.findById(req.query.id);
-    const match = await Match.findById(req.body.id);
-      return res.status(200).json({
-        status: "success",
-        data: {
-          match: match,
-  
-        }
-      });
-
-   
-  } catch (err) {
-    console.log(err);
-    res.status(404).json({
-      status: "fail",
-      message: err.message
-    });
   }
 };
