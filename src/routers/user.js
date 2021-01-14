@@ -28,21 +28,21 @@ router
 //------SITE ADMIN
 router
   .route("/siteAdmin/")
-  .get(userController.getUnAuthorizedUsers)
+  .get(userController.getUnAuthorizedUsers);
 
 router
   .route("/siteAdmin/getUsers/")
-  .get(userController.getAllUsers)
+  .get(userController.getAllUsers);
 router
   .route("/siteAdmin/:id")
   .patch(userController.approveUsers)
-  .delete(userController.removeUser)
+  .delete(userController.removeUser);
 
 //--------
 router
   .route("/:id")
   .get(userController.getUser)
-  .patch(userController.updateUser)
+  .patch(userController.updateUser);
 
 router
   .route("/viewMatch/")

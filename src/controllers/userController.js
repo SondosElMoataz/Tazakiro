@@ -386,8 +386,8 @@ exports.getUser = async (req, res) => {
 
 //_______UPDATE__USER__//
 exports.updateUser = async (req, res) => {
-
   const updates = Object.keys(req.body);
+  console.log("updates")
   const allowedUpdates = ["firstname",
   "lastname",
   "birthdate",
@@ -398,6 +398,7 @@ exports.updateUser = async (req, res) => {
 
   const isValidOperation = updates.every((update) =>allowedUpdates.includes(update));
   if (!isValidOperation) {
+    console.log("not valid")
     return res.status(400).json({
       status: "fail",
       message: "Bad Request",
@@ -405,6 +406,7 @@ exports.updateUser = async (req, res) => {
   }
   try {    
     const user = await User.findById(req.params.id);
+    console.log("found user")
     updates.forEach((update) => {
       user[update] = req.body[update]
     })
@@ -432,6 +434,7 @@ exports.getCurrentUser = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
+    console.log("logging in")
     const user = await User.findByCredentials(
       req.body.email,
       req.body.password
