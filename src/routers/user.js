@@ -48,7 +48,9 @@ router
   .route("/viewMatch/")
   .get(userController.viewMatchDetails);
 
-
+  router
+  .route('/login')
+  .post(userController.login);
 
 
   module.exports = router;
